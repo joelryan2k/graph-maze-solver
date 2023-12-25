@@ -30,9 +30,7 @@ class Walk:
         self.search_type = search_type
 
     def advance(self):
-        if self.current_node == self.maze.end:
-            print('we got it!')
-            return True
+        changes = [self.current_node]
 
         unvisited_adjacent_nodes = [node for node in self.maze.find_adjacent_nodes(self.maze.data, self.current_node) if node not in self.visited]
         self.frontier.extend(unvisited_adjacent_nodes)
@@ -50,6 +48,13 @@ class Walk:
 
         if self.current_node is None:
             raise Exception('out of nodes :(')
+        
+        changes.append(self.current_node)
+
+        return changes
+        
+    def is_complete(self):
+        return self.maze.end == self.current_node
 
 def solve(maze: Maze):
     where_am_i = maze.beginning

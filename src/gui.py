@@ -8,7 +8,7 @@ from .solve import Walk
 SQUARE_SIZE = 15
 
 def run_game(maze: Maze):
-    walk = Walk(maze=maze, current_node=maze.beginning, bfs=False)
+    walk = Walk(maze=maze, current_node=maze.beginning, search_type='a-star')
 
     pygame.init()
 
@@ -45,7 +45,7 @@ def run_game(maze: Maze):
 
         pygame.display.update()
 
-        time.sleep(.01)
+        time.sleep(.1)
         walk.advance()
         # window_surface.blit(background, (0, 0))
 

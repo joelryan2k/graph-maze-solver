@@ -29,7 +29,7 @@ class Walk:
             print('we got it!')
             return True
 
-        unvisited_adjacent_nodes = [node for node in self.maze.graph.adj[self.current_node] if node not in self.visited]
+        unvisited_adjacent_nodes = [node for node in self.maze.find_adjacent_nodes(self.maze.data, self.current_node) if node not in self.visited]
         self.frontier.extend(unvisited_adjacent_nodes)
         self.visited.add(self.current_node)
 

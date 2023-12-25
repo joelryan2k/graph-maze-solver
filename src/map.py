@@ -1,7 +1,7 @@
 import typing
 
 from .maze import Maze
-from .graph import TNODE, Graph
+from .graph import TNODE
 
 def is_beginning(data: typing.List[str], x: int, y: int):
     return data[y][x] == 'S'
@@ -24,7 +24,6 @@ def adjust_width(row: str, col_width: int):
 def read_map(data: typing.List[str], col_width: int):
     beginning: typing.Union[TNODE, None] = None
     end: typing.Union[TNODE, None] = None
-    graph = Graph()
 
     data = [adjust_width(row, col_width) for row in data]
 
@@ -38,26 +37,10 @@ def read_map(data: typing.List[str], col_width: int):
             elif is_end(data, x, y):
                 end = (x, y)
 
-            # right
-            if is_passable(data, x + 1, y):
-                graph.add_path((x, y), (x + 1, y))
-
-            # left
-            if is_passable(data, x - 1, y):
-                graph.add_path((x, y), (x - 1, y))
-
-            # above
-            if is_passable(data, x, y - 1):
-                graph.add_path((x, y), (x, y - 1))
-
-            # below
-            if is_passable(data, x, y + 1):
-                graph.add_path((x, y), (x, y + 1))
-
     if not beginning:
         raise Exception('no beginning')
 
     if not end:
         raise Exception('no end')
 
-    return Maze(graph, beginning, end, data)
+    return Maze(beginning, end, data)

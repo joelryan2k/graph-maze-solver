@@ -1,19 +1,22 @@
 import pygame
 import time
+import datetime
 
 from .maze import Maze
 from .map import is_beginning, is_end, is_passable
-from .solve import Walk
+from .solve import Walk, AStar
 
 SQUARE_SIZE = 15
 
-def draw_node(node, walk: Walk, window_surface):
-    if walk.current_node == node:
-        color = 'purple'
-    elif is_beginning(walk.maze.data, *node):
+def draw_node(node, walk: AStar, window_surface):
+    if is_beginning(walk.maze.data, *node):
         color = 'green'
     elif is_end(walk.maze.data, *node):
         color = 'yellow'
+    elif walk.path and node in walk.path:
+        color = 'orange'
+    elif walk.current_node == node:
+        color = 'purple'
     elif node in walk.visited:
         color = 'grey'
     elif is_passable(walk.maze.data, *node):
@@ -25,7 +28,8 @@ def draw_node(node, walk: Walk, window_surface):
 
 
 def run_game(maze: Maze):
-    walk = Walk(maze=maze, current_node=maze.beginning, search_type='a-star')
+    # walk = Walk(maze=maze, current_node=maze.beginning, search_type='a-star')
+    walk = AStar(maze=maze, start=maze.beginning)
 
     pygame.init()
 
@@ -42,21 +46,31 @@ def run_game(maze: Maze):
 
     pygame.display.update()
     is_running = True
+    kill = None
 
-    while is_running:
-
+    while is_running and (kill is None or kill > datetime.datetime.now()):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 is_running = False
 
-        # time.sleep(.1)
+        # time.sleep(.01)
+        changes = []
+
         if not walk.is_complete():
             changes = walk.advance()
-            # print(changes)
+        else:
+            changes = walk.path
+
+        if len(changes):
             for change in changes:
                 draw_node(change, walk, window_surface)
+
             pygame.display.update()
 
-        # window_surface.blit(background, (0, 0))
+        if walk.is_complete() and kill is None:
+            print(walk.path)
+            pygame.display.update()
+            kill = datetime.datetime.now() + datetime.timedelta(seconds=2)
+            time.sleep(.1)
 
-    pygame.display.update()
+    # pygame.display.update()

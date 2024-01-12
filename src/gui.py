@@ -10,11 +10,11 @@ SQUARE_SIZE = 15
 
 def draw_node(node, walk: AStar, window_surface):
     if is_beginning(walk.maze.data, *node):
-        color = 'green'
+        color = 'blue'
     elif is_end(walk.maze.data, *node):
         color = 'yellow'
     elif walk.path and node in walk.path:
-        color = 'orange'
+        color = 'green'
     elif walk.current_node == node:
         color = 'purple'
     elif node in walk.visited:
@@ -53,7 +53,7 @@ def run_game(maze: Maze):
             if event.type == pygame.QUIT:
                 is_running = False
 
-        # time.sleep(.01)
+        # time.sleep(.1)
         changes = []
 
         if not walk.is_complete():
@@ -70,7 +70,6 @@ def run_game(maze: Maze):
         if walk.is_complete() and kill is None:
             print(walk.path)
             pygame.display.update()
-            kill = datetime.datetime.now() + datetime.timedelta(seconds=2)
-            time.sleep(.1)
+            kill = datetime.datetime.now() + datetime.timedelta(seconds=.5)
 
     # pygame.display.update()
